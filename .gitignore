@@ -1,4 +1,9 @@
 Cache_Ignorar/
+.gitignore
+testes.asm.ini 
+testes.c
+testes.mcp51
+
 #-------------------------------------codeblocks----------------------------------
 # Created by https://www.gitignore.io/api/codeblocks
 
