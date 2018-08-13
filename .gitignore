@@ -1,0 +1,45 @@
+Cache_Ignorar/
+#-------------------------------------codeblocks----------------------------------
+# Created by https://www.gitignore.io/api/codeblocks
+
+### CodeBlocks ###
+# specific to CodeBlocks IDE
+*.layout
+*.depend
+
+# generated directories
+bin/
+obj/
+
+
+#----------------------------------------------------------------------------------------
+#---------------------------------MikroC--------------------------------------------
+# Created by https://www.gitignore.io/api/mikroc
+
+### MikroC ###
+# Backup
+*.pdsbak
+
+# Debug
+Debug
+
+# Generated files
+*.workspace
+*.log
+*.bmk
+*.brk
+*.cfg
+*.dbg
+*.dct
+*.dlt
+*.hex
+*.lst
+*.dic
+*_callertable.txt
+*.user.dic
+*.asm
+*.c.ini
+*.h.ini
+*.cp
+*.mcl
+#-----------------------------------------------------------------------------------
