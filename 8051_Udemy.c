@@ -1,22 +1,21 @@
 void main() {
 
-     P0 = 0x0f;                         // 0000-1111 (0-Output & 1-Input)
+     /*  Vamos programar o Port 1 e o port 2
+            Ambas as portas são de 8 bits de largura, bidirecionais e têm pull-ups internos, antes, nós conectamos P0 com
+            resistores de pull-up externos.
+            Mas não há necessidade de nenhum resistor de pull up para os Ports P1 e P0 (já possuem internos)
+
+                 Por padrão, ambas as portas são configuradas como entrada na energização.
+
+            Vamos fazer um programa simples que irá definir a porta 1 como entrada e a porta 2 como saída
+            e qualquer entrada que eu aplicar na porta 1 será enviada para a porta 2
+     */
+
+   
+     P1 = 0xff;                         // 1111-1111  PORT1 (1-Input)
+     P2 = 0x00;                         // 0000-0000  PORT2 (0-Output)
      while(1){
-       
-        /* O que esse código vai fazer? ele simplesmente lerá P0 bit 0 e gravará no P0 bit 4
-            Da mesma forma, o bit 1 será gravado no bit 5
-            bit 2 será escrito para bit 6 e bit 3 de P0 será escrito para bit 7 de P0
-            bit 2 será escrito para bit 6 e bit 3 de P0 será escrito para bit 7 de P0
-            
-             seja qual for a entrada que eu aplico no bit 0,1,2 e 3
-             o mesmo está aparecendo no bit 4,5,6 e 7 respectivamente
-        */
-       
-        // acesso individual bit a bit no MikroC
-        P0.B4 = P0.B0;
-        P0.B5 = P0.B1;
-        P0.B6 = P0.B2;
-        P0.B7 = P0.B3;
+        P2 = P1;                        // Port2 igual a o Port1
      }
      
 
