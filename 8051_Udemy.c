@@ -18,6 +18,30 @@ void squareWave(void){
         P3.B7 = 0;
      }
 }
+//Gerar uma onda quadrada com duty cycle de 25%
+void wave_25_duty(void){
+     while(1){
+       //********* 150us ******//
+        TL0 = 0x76;                              // Lower Byte
+        TH0 = 0xff;                              // Upper Byte
+        TCON.TR0 = 1;
+        //********************//
+        P3.B7 = 0;
+        while(!TCON.TF0);
+        TCON.TR0 = 0;
+        TCON.TF0 = 0;
+        //********* 50us ******//
+        TL0 = 0xD2;                              // Lower Byte
+        TH0 = 0xff;                              // Upper Byte
+        TCON.TR0 = 1;                            // Run timer
+        //********************//
+        P3.B7 = 1;
+        while(!TCON.TF0);
+        TCON.TR0 = 0;
+        TCON.TF0 = 0;
+     }
+  }
+
 void main() {
 
      unsigned int sum;
@@ -28,12 +52,8 @@ void main() {
      UART1_INIT(9600);
      PCON.SMOD = 0;
      
-     TMOD = 0x02;
-     SCON = 0x50;                                 // 8-bit, rx enable
-     TL0  = 0x00;                                 // Lower Byte
-     TH0  = 0xD2;                                 // Upper Byte
-     TCON.TR0  = 1;                               // Run timer
-     squareWave();
+     TMOD = 0x01;                                // registrador TMOD  0000-0001
+     wave_25_duty();
      
      Lcd_init();
      delay_ms(10);
