@@ -1,6 +1,6 @@
 [DEVICE]
 Name=AT89S51
-Clock=12000000
+Clock=11059200
 [MEMORY_MODEL]
 Value=0
 [BUILD_TYPE]
@@ -33,8 +33,8 @@ Count=0
 [SEARCH_PATH]
 Count=3
 Path0=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for 8051\defs\
-Path1=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for 8051\Uses\ATMEL\
-Path2=C:\Estudo_8051\
+Path1=C:\Estudo_8051\
+Path2=C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for 8051\Uses\ATMEL\
 [HEADER_PATH]
 Count=0
 [HEADERS]
