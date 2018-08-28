@@ -7,6 +7,9 @@ sbit LCD_D6 at P2_4_bit;
 sbit LCD_D5 at P2_3_bit;
 sbit LCD_D4 at P2_2_bit;
 
+/*Ponteiro de Funções
+void Lcd_sendString(char line, char column,  char *msg);
+*/
 //Gerar uma onda quadrada com duty cycle de 50%
 void squareWave(void){
      while(1){
@@ -54,6 +57,14 @@ void wave_25_duty(void){
 */
 char toggle = 0;
 char counter2 = 0;
+char KeyboardKey = 'K';                                   // Variável que usaremos para armazenar um byte recebido da porta serial
+
+void SerialISR() iv IVT_ADDR_ES ilevel 0 ics ICS_AUTO {
+     if (uart1_data_ready())
+     {
+         KeyboardKey = UART1_Read();                      // Faz a Leitura da Serial e atribui na variável
+     }
+}
 
 /*--------Interrupção  INT1 --------*/
 void Ex1ISR() iv IVT_ADDR_EX1 ilevel 0 ics ICS_AUTO {
@@ -84,19 +95,23 @@ void main() {
      TL1   = 0x00;                                // Byte menos significativo
      TH1   = 0xFD;                                // Byte mais significativo
      TCON.TR1 = 1;                                // Run timer
-     
 
+     Lcd_init();
+     delay_ms(10);
+     
      TH0 = 0;
      TL0 = 0;
      TCON.TF0 = 0;
      TCON.TR0 = 1;
-
-     Lcd_init();
-     delay_ms(10);
+     
      lcd_cmd(_LCD_CURSOR_OFF);                    // lcd_cmd() ---> função para fazer comandos no LCD
-     lcd_out(1,1,"Counter=");
-
-     IE = 0x85;                                   // 1000-0101 ---> Habilitar interrupção externa
+     lcd_out(1,1,"Key=");
+    
+     /*
+     Lcd_sendString(1, 1,"Key=");
+     */
+    
+     IE = 0x95;                                   // 1001-0101
      TCON.IT0 = 1;                                // IT0 = 1 (Habilita a entrada do sinal para interrupção 0)
      TCON.IT1 = 1;                                // Habilita a Segunda Interrupção
 
@@ -111,7 +126,8 @@ void main() {
         ByteToStr(counter2, txt);
         UART1_WRITE_TEXT("Counter2=");
         UART1_WRITE_TEXT(txt);
-        UART1_WRITE_TEXT("\r\n");
+        UART1_WRITE_TEXT("\r\n\r\n");
+        Lcd_Chr(1, 6, KeyboardKey);                // Manda o caracter para o LCD
         delay_ms(500);
      }
      
@@ -128,3 +144,8 @@ void main() {
          delay_ms(500);
      }
 }
+/*
+void Lcd_sendString(char line, char column,  char *msg){
+    lcd_out(line,column, msg);
+}
+*/
