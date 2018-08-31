@@ -59,6 +59,12 @@ char toggle = 0;
 char counter2 = 0;
 char KeyboardKey = 'K';                                   // Variável que usaremos para armazenar um byte recebido da porta serial
 
+char squareWaveToggleByte = 0;                            // Alternância da onda quadrada
+void Timer0ISR() iv IVT_ADDR_ET0 ilevel 0 ics ICS_AUTO {
+     squareWaveToggleByte =! squareWaveToggleByte;
+     P0.B0 = squareWaveToggleByte;
+}
+
 void SerialISR() iv IVT_ADDR_ES ilevel 0 ics ICS_AUTO {
      if (uart1_data_ready())
      {
@@ -88,41 +94,36 @@ void main() {
      P0 = 0xff;                                   // 1111-1111  PORT1 (1-Input)
      P1 = 0x00;
 
-     TMOD = 0x26;                                 // 0010-0110 Counter, mode 2(auto reload), timer0
-
+     TMOD = 0x22;                                 // 0010-0010 Counter, mode 2(auto reload), timer0
+/*-------- Timer 1 para porta serial -------------------------------------------------------------------------------------------*/
      PCON |= 0x80;                                // Set SMOD
      SCON  = 0x50;                                // 8-bit, rx habilitado
      TL1   = 0x00;                                // Byte menos significativo
      TH1   = 0xFD;                                // Byte mais significativo
      TCON.TR1 = 1;                                // Run timer
+/*------------------------------------------------------------------------------------------------------------------------------*/
 
+/*-------- Timer 0 para geração de onda quadrada -------------------------------------------------------------------------------*/
+                                               // Valores calculados pelo software "Calculator for 8051 Family by Kaushik B.M."
+      TL0 = 0x00;                              // Lower Byte
+      TH0 = 0x1A;                              // Upper Byte
+      TCON.TR0 = 1;                            // Run timer
+/*------------------------------------------------------------------------------------------------------------------------------*/
      Lcd_init();
      delay_ms(10);
-     
-     TH0 = 0;
-     TL0 = 0;
-     TCON.TF0 = 0;
-     TCON.TR0 = 1;
-     
+
      lcd_cmd(_LCD_CURSOR_OFF);                    // lcd_cmd() ---> função para fazer comandos no LCD
      lcd_out(1,1,"Key=");
     
      /*
      Lcd_sendString(1, 1,"Key=");
      */
-    
-     IE = 0x95;                                   // 1001-0101
+
      TCON.IT0 = 1;                                // IT0 = 1 (Habilita a entrada do sinal para interrupção 0)
      TCON.IT1 = 1;                                // Habilita a Segunda Interrupção
+     IE = 0x97;                                   // 1001-0111
 
      while(1){
-        counter = TL0;
-        ByteToStr(counter, txt);
-        lcd_out(2,1,txt);
-        UART1_WRITE_TEXT("Contador de pulso =");
-        UART1_WRITE_TEXT(txt);
-        UART1_WRITE_TEXT("\r\n");
-        
         ByteToStr(counter2, txt);
         UART1_WRITE_TEXT("Counter2=");
         UART1_WRITE_TEXT(txt);
